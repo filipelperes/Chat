@@ -1,0 +1,12 @@
+{
+    "name": "chat-aps",
+    "version": "0.0.1",
+    "description": "Chat da APS do 5° Semestre",
+    "dependencies": {
+        "express": "^4.16.4",
+        "socket.io": "^2.2.0"
+    },
+    "scripts": {
+        "start" : "node index.js"
+    }
+}
