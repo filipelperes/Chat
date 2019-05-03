@@ -29,6 +29,19 @@
           $('#m').val('');
           return false;
         });
+        //Evento ativo quando alguém sai do chat
+        socket.on('close person', function(){
+          $('#messages').append($('<li>').text('Uma pessoa saiu da sala'));
+          window.scrollTo(0, document.body.scrollHeight);
+        })
+
+        //Evento ativo quando alguém entra no chat
+        socket.on('new person', function(){
+          $('#messages').append($('<li>').text('Uma nova pessoa entrou na sala'));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        //Evento quando chega uma nova mensagem é enviada
         socket.on('chat message', function(msg){
           $('#messages').append($('<li>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
