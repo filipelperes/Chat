@@ -1,26 +1,45 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>APS 5° Semestre</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
+      h1 {font-size: 13pt;}
+      p {font-size: 1.25rem;}
+      .w-100 {width: 100% !important;}
+      .msg {margin-top: 5%;}
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="notify" onclick="document.getElementById('notify').style.display = 'none'" class="container fixed-top border border-secondary rounded mt-2 text-center">
+      <h1 class="my-2 text-muted font-weight-bold"></h1>
+    </div>
+    <div class="container msg">
+        <div class="row">
+          <w3 id="message" class="col-12">
+            <p></p>
+          </w3>
+        </div>
+    </div>
+    <div class="container fixed-bottom">
+      <form action="" class="row mb-2">
+        <div class="col-12 input-group">
+          <input id="m" class="form-control form-control-lg" autocomplete="off" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-primary">Send</button>
+          </div>
+        </div>
+      </form>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
       $(function () {
         var socket = io();
@@ -31,19 +50,19 @@
         });
         //Evento ativo quando alguém sai do chat
         socket.on('close person', function(){
-          $('#messages').append($('<li>').text('Uma pessoa saiu da sala'));
+          $('#notify').append($('<h1>').text('Uma pessoa saiu da sala'));
           window.scrollTo(0, document.body.scrollHeight);
         })
 
         //Evento ativo quando alguém entra no chat
         socket.on('new person', function(){
-          $('#messages').append($('<li>').text('Uma nova pessoa entrou na sala'));
+          $('#notify').append($('<h1>').text('Uma nova pessoa entrou na sala'));
           window.scrollTo(0, document.body.scrollHeight);
         });
 
         //Evento quando chega uma nova mensagem é enviada
         socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
+          $('#message').append($('<p>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
       });
