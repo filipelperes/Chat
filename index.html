@@ -13,6 +13,7 @@
       p {font-size: 1.25rem;}
       .w-100 {width: 100% !important;}
       .msg {margin-top: 5%;}
+
     </style>
   </head>
   <body>
@@ -21,10 +22,18 @@
     </div>
     <div class="container msg">
         <div class="row">
-          <w3 id="message" class="col-12">
+          <w3 id="message" class="col-10">
+            <p></p>
+          </w3>
+          <w3 id="group" class="col-2">
             <p></p>
           </w3>
         </div>
+    </div>
+    <div class="container">
+      <div class="col-12">
+          <p id="typing" class="col-12"></p>
+      </div>
     </div>
     <div class="container fixed-bottom">
       <form action="" class="row mb-2">
@@ -76,11 +85,25 @@
           $('#myModal').modal('hide');
         })
 
+        $('form').keydown(function(){
+          socket.emit('typing', name);
+        })
+
+        $('form').keyup(function(){
+          $('#typing').text('');
+          window.scrollTo(0, document.body.scrollHeight);
+        })
+
         $('form').submit(function(){
           socket.emit('chat message', $('#m').val(), name);
           $('#m').val('');
           return false;
         });
+
+        socket.on('typing', function(msg){
+          $('#typing').text(msg);
+          window.scrollTo(0, document.body.scrollHeight);
+        })
 
         //Evento ativo quando alguém sai do chat
         socket.on('close person', function(){
@@ -99,6 +122,11 @@
           $('#message').append($('<p>').text(msg));
           window.scrollTo(0, document.body.scrollHeight);
         });
+
+        socket.on('addPerson', function(name){
+          $('#group').append($('<p>').text(name));
+          window.scrollTo(0, document.body.scrollHeight);
+        })
       });
     </script>
   </body>
