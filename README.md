@@ -17,4 +17,4 @@ $ npm start
 
 ## Demo
 
-https://Chat--vinicius3333.repl.co
+https://chat-aps-5.herokuapp.com/
