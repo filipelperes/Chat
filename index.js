@@ -1,36 +1,48 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path');
 var port = process.env.PORT || 3000;
-var moment = require('moment');
+
+app.use(express.static(path.join(__dirname, 'client')));
+
+var users = [];
 
 app.get('/', function(req, res){
-  res.sendFile('/index.html', {root:'.'});
+  res.sendFile('/client/index.html', {root:'.'});
 });
 
 io.on('connection', function(socket){
-  //Quando alguém entra no site, esse evento
-  //é acionado
-  io.emit('new person');
 
   //Se algum cliente é desconectado do servidor
   //é ativado esse evento
   socket.on('disconnect', (reason) => {
-    io.emit('close person')
+    users.splice(users.indexOf(socket.name), 1);
+    socket.broadcast.emit('close person', socket.name, users);
   });
 
   //Se alguma nova mensagem é escrita, esse evento
   //vai ser ligado
-  socket.on('chat message', function(msg, name){
-    io.emit('chat message', moment().get('hour') + ":" + moment().get('minute') + "  " + name + ": " + msg);
+  socket.on('chat message', (data) => {
+    socket.broadcast.emit('chat message', data.time + " " + data.name + ": " + data.msg);
   });
 
-  socket.on('typing', function(name){
-    io.emit('typing', name + " is typing");
+  socket.on('typing', (msg) => {
+    socket.broadcast.emit('typing', msg);
+  })
+
+  socket.on('stop typing', () => {
+    socket.broadcast.emit('stop typing');
   })
 
   socket.on('addPerson', function(name){
-    io.emit('addPerson', name);
+    socket.name = name;
+    users.push(name);
+
+    socket.emit('welcomeMessage', users);
+
+    socket.broadcast.emit('addPerson', socket.name, users);
   })
 });
 
