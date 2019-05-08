@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>APS 5° Semestre</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="./main.css">
+  </head>
+  <body>
+    <!--<div id="notify" onclick="document.getElementById('notify').style.display = 'none'" class="container fixed-top border border-secondary rounded mt-2 text-center">
+      <h1 class="my-2 text-muted font-weight-bold"></h1>
+    </div>-->
+    <div class="container msg">
+        <div class="row">
+          <div id="message" class="col-10">
+          </div>
+          <div id="group" class="col-2">
+          </div>
+        </div>
+    </div>
+    <div class="container">
+      <div class="col-12">
+          <p id="typing" class="col-12"></p>
+      </div>
+    </div>
+    <div class="container fixed-bottom">
+      <form id="formMsg" action="" class="row mb-2">
+        <div class="col-12 input-group">
+          <input id="m" class="form-control form-control-lg" autocomplete="off" />
+          <button class="btn btn-outline-primary">Send</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="name" aria-hidden="true" style="background: black">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title">Qual seu nome</h5>
+          </div>
+          <div class="modal-body">
+            <form id="formUser" action="">
+              <div>
+                <label for="recipient-name" class="col-form-label">Nome:</label>
+                <input type="text" class="form-control" placeholder="Nome" id="inputName">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button id="btnName"  type="button" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+</html>
