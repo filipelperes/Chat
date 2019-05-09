@@ -19,47 +19,73 @@ $(function () {
     var $m = $('#m');
     var $notify = $('#notify');
     var $message = $('#message');
+    var $sent_msg = $('.sent_msg');
+    var $received_withd_msg = $('.received_withd_msg');
     var $group = $('#group');
     var $butt = $('#butt');
-    
+    var $cardChat = $('#card-chat');
+    var $cardBody = $('#card-msg');
+    var $window = $( window );
+
+    const resize = () => {
+      $cardChat.height($window.height() - 50 );
+      $cardBody.height($window.height() - 50 );     
+    }
+
     const setUser = () => {
       name = $inputName.val();
-      socket.emit('addPerson', name)
-      //setGroup()
-      //addUserGroup(name);
+      socket.emit('addPerson', name);
       $modal.modal('hide');
     }
 
-    const sendMessage = (data) => {
-      var msg = data.time + " " + data.name + ": " + data.msg;
-      addMessageChat(msg);
-    }
+    const addMessageChat = (data, options) => {
+      if(options.log === true){
+        var msg = data.msg;
+      } else {
+        var msg = data.name + ": " + data.msg;
+      }
 
-    const addMessageChat = (msg) => {
-      $message.append($('<p>').text(msg));
+      if(options.right === true){
+        $message.append($('\
+          <div class="outgoing_msg">\
+            <div class="sent_msg">\
+              <p>' + msg + '</p>\
+              <span class="time_date"> ' + data.time + '</span>\
+            </div>\
+          </div>'
+        ));
+      } else {
+        $message.append($('\
+        <div class="incoming_msg">\
+          <div class="received_msg">\
+            <div class="received_withd_msg">\
+              <p>' + msg +  '</p>\
+              <span class="time_date">' + data.time + '</span></div>\
+          </div>\
+        </div>\
+        '))
+      }
       window.scrollTo(0, document.body.scrollHeight);
     }
 
-    const setGroup = (group) => {
-      var list = document.createElement('ul');
+    const addGroupChat = (list) => {
+      $group.append(list);
+    }
 
-      console.log(group)
+    const generateGroup = (group) => {
+      var list = document.createElement('ul');
+      list.setAttribute("class", "list-group list-group-flush");
 
       for(var i = 0; i < group.length; i++) {
           var item = document.createElement('li');
+          item.setAttribute("class", "list-group-item");
 
           item.appendChild(document.createTextNode(group[i]));
 
           list.appendChild(item);
       }
 
-      console.log(list)
-
-      $group.append(list);
-    }
-
-    const addUserGroup = (name) => {
-      $group.append($('<p>').text(name));
+      addGroupChat(list);
     }
 
     const addTypingChat = (msg) => {
@@ -82,10 +108,6 @@ $(function () {
         }
       }, TYPING_TIMER_LENGTH);
       //$typing.text(msg);
-    }
-
-    const removeUserMessage = (msg) => {
-      $notify.append($('<h1>').text(msg));
     }
 
     const removeUserGroup = () => {
@@ -115,7 +137,11 @@ $(function () {
         msg: msg,
         name: name
       }
-      sendMessage(data);
+      console.log(data)
+      addMessageChat(data, {
+        right: true,
+        log: false
+      });
       socket.emit('chat message', data);
       $m.val('');
       return false;
@@ -125,22 +151,37 @@ $(function () {
       updateTyping();
     })
 
-    socket.on('chat message', (msg) => {
-      addMessageChat(msg);
+    socket.on('chat message', (data) => {
+      addMessageChat(data, {
+        right: false,
+        log: false
+      });
     })
 
     socket.on('welcomeMessage', (users) => {
-      $message.append($('<p>').text('bem vindo ' + name + '!'));
-      console.log(users)
-      setGroup(users);
+      addMessageChat({  
+        msg: 'Bem vindo ' + name + '!',
+        time: moment.get('hour') + ":" + moment.get('minute')
+      }, { 
+        right: false,
+        log: true
+      })
+      generateGroup(users);
       window.scrollTo(0, document.body.scrollHeight);
     })
 
     socket.on('addPerson', (name, users) => {
-      $message.append($('<p>').text(name + ' acabou de entrar na sala!'));
+      addMessageChat({  
+        msg: name + ' acabou de entrar na sala!',
+        time: moment.get('hour') + ":" + moment.get('minute')
+      }, { 
+        right: false,
+        log: true
+      })
       console.log(users);
+      console.log($group);
       $group[0].removeChild($group[0].childNodes[1]);
-      setGroup(users);
+      generateGroup(users);
       window.scrollTo(0, document.body.scrollHeight);
     })
 
@@ -155,9 +196,21 @@ $(function () {
     })
 
     socket.on('close person', (name, users) => {
-      removeUserMessage(name + ' saiu da sala!')
+      addMessageChat({  
+        msg: name + ' saiu da sala!',
+        time: moment.get('hour') + ":" + moment.get('minute')
+      }, { 
+        right: false,
+        log: true
+      })
       $group[0].removeChild($group[0].childNodes[1]);
-      setGroup(users);
+      generateGroup(users);
       window.scrollTo(0, document.body.scrollHeight);
     })
+
+    $window.resize(function() {
+      resize();
+    });
+
+    resize();
   });

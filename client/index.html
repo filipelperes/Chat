@@ -9,14 +9,49 @@
     <link type="text/css" rel="stylesheet" href="./main.css">
   </head>
   <body>
+    <div class="container" style="padding: 20px;">
+      <div class="row">
+        <div class="col-sm-8">
+          <div id="card-chat" class="card" style="overflow: auto;">
+            <div class="card-header">
+              Global
+            </div>
+            <div id="card-msg" class="card-body" style="overflow: auto;">
+              <div id="message"></div>   
+            </div>
+            <form class="input-group" id="formMsg">  
+              <input id="m" type="text" class="form-control" placeholder="Digite alguma coisa aqui..." />
+              <div class="input-group-append">
+                <button class="btn btn-outline-primary">Send</button>
+              </div>
+            </form>
+          </div>
+        </div>  
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-header">
+              Pessoas Online
+            </div>
+            <div class="card-body" style="padding: 0px;" id="group">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!--<div id="notify" onclick="document.getElementById('notify').style.display = 'none'" class="container fixed-top border border-secondary rounded mt-2 text-center">
       <h1 class="my-2 text-muted font-weight-bold"></h1>
     </div>-->
-    <div class="container msg">
+    <!--<div class="container msg">
         <div class="row">
-          <div id="message" class="col-10">
+          <div class="card col-8 h-75" style="overflow: auto;">
+            <div class="card-header">
+                Global
+            </div>
+            <div class="card-body" id="message">
+            </div>
           </div>
-          <div id="group" class="col-2">
+          <div class="card col-4" id="group" class="col-2">
           </div>
         </div>
     </div>
@@ -32,7 +67,7 @@
           <button class="btn btn-outline-primary">Send</button>
         </div>
       </form>
-    </div>
+    </div>-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="name" aria-hidden="true" style="background: black">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
