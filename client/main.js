@@ -9,12 +9,17 @@ $(function () {
 
     var name = '';
     var typing = false;
+    var img;
 
     var $modal = $('#myModal');
     var $btnName = $('#btnName');
     var $formMsg = $('#formMsg');
+    var $sendButton = $('#sendButton');
+    var $sendImage = $('#sendImage');
     var $formUser = $('#formUser');
+    var $uploadImage = $('.upload-options');
     var $inputName = $('#inputName');
+    var $imgChat = $('#img-chat');
     var $typing = $('#typing');
     var $m = $('#m');
     var $notify = $('#notify');
@@ -39,34 +44,78 @@ $(function () {
     }
 
     const addMessageChat = (data, options) => {
-      if(options.log === true){
-        var msg = data.msg;
+      var msg = options.log ? data.msg : data.name + ": " + data.msg;
+      if(options.image){
+        if(options.right){
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            $message.append($('\
+              <div class="outgoing_msg">\
+                <div class="sent_msg">\
+                  <div class="card">\
+                    <a href="#" id="img-chat"><img class="card-img-top" src=' + e.target.result + ' style="width:100%; height:250px;"></img></a>\
+                    <div class="card-body" style="padding: 0px">\
+                      <p style="border-radius: 0px;">' + data.msg + '</p>\
+                    </div>\
+                  </div>\
+                  <span class="time_date"> ' + data.time + '</span>\
+                </div>\
+              </div>'
+            ));
+          };
+          reader.readAsDataURL(data.image);
+        } else{
+          var uint8Arr = new Uint8Array(data.image);
+          var binary = '';
+          for (var i = 0; i < uint8Arr.length; i++) {
+              binary += String.fromCharCode(uint8Arr[i]);
+          }
+          var base64String = window.btoa(binary);
+      
+          var img = new Image();
+          img.src = 'data:image/png;base64,' + base64String;
+          $message.append($('\
+            <div class="incoming_msg">\
+              <div class="received_msg">\
+                <div class="received_withd_msg">\
+                  <div class="card">\
+                    <a href="#" id="img-chat"><img class="card-img-top" src=' + img.src + ' style="width:100%; height:250px;"></img></a>\
+                    <div class="card-body" style="padding: 0px">\
+                      <p style="border-radius: 0px;">' + data.msg + '</p>\
+                    </div>\
+                  </div>\
+                  <span class="time_date"> ' + data.time + '</span>\
+                </div>\
+              </div>\
+            </div>'
+          ));
+        }
       } else {
-        var msg = data.name + ": " + data.msg;
+        if(options.right){
+          $message.append($('\
+            <div class="outgoing_msg">\
+              <div class="sent_msg">\
+                <p>' + msg + '</p>\
+                <span class="time_date"> ' + data.time + '</span>\
+              </div>\
+            </div>'
+          ));
+        } else {
+          $message.append($('\
+            <div class="incoming_msg">\
+              <div class="received_msg">\
+                <div class="received_withd_msg">\
+                  <p>' + msg +  '</p>\
+                  <span class="time_date">' + data.time + '</span>\
+                </div>\
+              </div>\
+            </div>\
+          '))
+        }
       }
 
-      if(options.right === true){
-        $message.append($('\
-          <div class="outgoing_msg">\
-            <div class="sent_msg">\
-              <p>' + msg + '</p>\
-              <span class="time_date"> ' + data.time + '</span>\
-            </div>\
-          </div>'
-        ));
-      } else {
-        $message.append($('\
-        <div class="incoming_msg">\
-          <div class="received_msg">\
-            <div class="received_withd_msg">\
-              <p>' + msg +  '</p>\
-              <span class="time_date">' + data.time + '</span></div>\
-          </div>\
-        </div>\
-        '))
-      }
-      window.scrollTo(0, document.body.scrollHeight);
-    }
+      $cardBody.scrollTop($cardBody[0].scrollHeight);
+    };
 
     const addGroupChat = (list) => {
       $group.append(list);
@@ -109,9 +158,23 @@ $(function () {
       }, TYPING_TIMER_LENGTH);
       //$typing.text(msg);
     }
+    
+    $uploadImage.on('change', getFile);
 
-    const removeUserGroup = () => {
+    function getFile(image){
+      img = image;
+      var name = image.target.files[0].name;
+      var imgName = name.substring(name.indexOf('.'));
 
+      $('.upload-options label').addClass('without-img');
+      if($('.without-img p').length) {
+        $('.without-img p').remove();
+      }
+      $('.without-img').append(
+        $('\
+        <p style="position: absolute; left: 18%; top: 22%;">' + imgName + '</p>\
+        ')
+      )
     }
 
     $modal.modal({
@@ -130,36 +193,77 @@ $(function () {
       setUser();
     })
 
-    $formMsg.submit(() => {
-      var msg = $m.val();
-      var data = {
-        time: moment.get('hour') + ":" + moment.get('minute'),
-        msg: msg,
-        name: name
+    $sendButton.on('click', function(){
+      if(img){
+        console.log('tem alguma imagem')
+        var msg = $m.val();
+        var file = img.target.files[0];
+        var data = {
+          time: moment.get('hour') + ":" + moment.get('minute'),
+          msg: msg,
+          name: name,
+          image: file
+        } 
+        addMessageChat(data, {
+          right: true,
+          log: false,
+          image: true
+        });
+        socket.emit('chat message', data, {
+          right: false,
+          log: false,
+          image: true
+        });
+      } else{
+        console.log('não tem alguma imagem');
+        var msg = $m.val();
+        var data = {
+          time: moment.get('hour') + ":" + moment.get('minute'),
+          msg: msg,
+          name: name
+        }
+        console.log(data)
+        addMessageChat(data, {
+          right: true,
+          log: false,
+          image: true
+        });
+        socket.emit('chat message', data, {
+          right: false,
+          log: false,
+          image: true
+        });
+        $m.val('');
       }
-      console.log(data)
-      addMessageChat(data, {
-        right: true,
-        log: false
-      });
-      socket.emit('chat message', data);
-      $m.val('');
       return false;
     });
+
+    $sendImage.on('click', function(){
+      console.log('imagem')
+      return false
+    })
 
     $formMsg.on('input', () => {
       updateTyping();
     })
 
-    socket.on('chat message', (data) => {
-      addMessageChat(data, {
-        right: false,
-        log: false
-      });
+    $message.on('click', 'a', function(){
+			$('.imagepreview').attr('src', $(this).find('img').attr('src'));
+      $('#imagemodal').modal('show'); 
+      return false;  
     })
 
-    socket.on('welcomeMessage', (users) => {
-      addMessageChat({  
+    socket.on('chat message', function(data, options){
+      console.log(options);
+      if(options.image){
+        addMessageChat(data, options);
+      } else {
+        addMessageChat(data, options);
+      }
+    })
+
+    socket.on('welcomeMessage', function(users){
+      addMessageChat({
         msg: 'Bem vindo ' + name + '!',
         time: moment.get('hour') + ":" + moment.get('minute')
       }, { 
@@ -167,7 +271,7 @@ $(function () {
         log: true
       })
       generateGroup(users);
-      window.scrollTo(0, document.body.scrollHeight);
+      $message.scrollTop($message.height());
     })
 
     socket.on('addPerson', (name, users) => {
@@ -182,17 +286,17 @@ $(function () {
       console.log($group);
       $group[0].removeChild($group[0].childNodes[1]);
       generateGroup(users);
-      window.scrollTo(0, document.body.scrollHeight);
+      $message.scrollTop($message.height());
     })
 
     socket.on('typing', (msg) => {
       addTypingChat(msg);
-      window.scrollTo(0, document.body.scrollHeight);
+      $message.scrollTop($message.height());
     })
 
     socket.on('stop typing', () => {
       addTypingChat('');
-      window.scrollTo(0, document.body.scrollHeight);
+      $message.scrollTop($message.height());
     })
 
     socket.on('close person', (name, users) => {
@@ -205,7 +309,7 @@ $(function () {
       })
       $group[0].removeChild($group[0].childNodes[1]);
       generateGroup(users);
-      window.scrollTo(0, document.body.scrollHeight);
+      $message.scrollTop($message.height());
     })
 
     $window.resize(function() {
@@ -213,4 +317,4 @@ $(function () {
     });
 
     resize();
-  });
+});

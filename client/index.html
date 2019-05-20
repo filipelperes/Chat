@@ -6,9 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>APS 5° Semestre</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="./main.css">
   </head>
-  <body>
+  <body style="overflow: hidden">
     <div class="container" style="padding: 20px;">
       <div class="row">
         <div class="col-sm-8">
@@ -19,10 +20,18 @@
             <div id="card-msg" class="card-body" style="overflow: auto;">
               <div id="message"></div>   
             </div>
-            <form class="input-group" id="formMsg">  
-              <input id="m" type="text" class="form-control" placeholder="Digite alguma coisa aqui..." />
+            <form class="input-group" id="formMsg"> 
+              <div class="input-group-prepend">
+                <div class="upload-options">
+                  <label>
+                    <input type="file" class="image-upload" accept="image/*"/>
+                  </label>
+                </div>
+                <!--<button type="file" id="sendImage" class="btn btn-outline-secondary"><i class="material-icons">add_photo_alternate</i></button>-->
+              </div> 
+              <input id="m" type="text" class="form-control form-control-lg" placeholder="Digite alguma coisa aqui..." />
               <div class="input-group-append">
-                <button class="btn btn-outline-primary">Send</button>
+                <button id="sendButton" class="btn btn-outline-primary">Send</button>
               </div>
             </form>
           </div>
@@ -38,36 +47,16 @@
         </div>
       </div>
     </div>
-
-    <!--<div id="notify" onclick="document.getElementById('notify').style.display = 'none'" class="container fixed-top border border-secondary rounded mt-2 text-center">
-      <h1 class="my-2 text-muted font-weight-bold"></h1>
-    </div>-->
-    <!--<div class="container msg">
-        <div class="row">
-          <div class="card col-8 h-75" style="overflow: auto;">
-            <div class="card-header">
-                Global
-            </div>
-            <div class="card-body" id="message">
-            </div>
-          </div>
-          <div class="card col-4" id="group" class="col-2">
+    <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="max-width: 950px !important;">
+        <div class="modal-content">              
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <img src="" class="imagepreview" style="width: 100%;" >
           </div>
         </div>
-    </div>
-    <div class="container">
-      <div class="col-12">
-          <p id="typing" class="col-12"></p>
       </div>
     </div>
-    <div class="container fixed-bottom">
-      <form id="formMsg" action="" class="row mb-2">
-        <div class="col-12 input-group">
-          <input id="m" class="form-control form-control-lg" autocomplete="off" />
-          <button class="btn btn-outline-primary">Send</button>
-        </div>
-      </form>
-    </div>-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="name" aria-hidden="true" style="background: black">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

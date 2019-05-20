@@ -45,3 +45,71 @@ p {font-size: 1.25rem;}
 }
 
 .received_withd_msg { width: 57%;}
+
+.container {
+    margin-top: 10px;
+}
+.nav-tabs > a {
+    position:relative;
+}
+.nav-tabs > li > a {
+    display:inline-block;
+}
+.nav-tabs > li > a > span {
+    cursor:pointer;
+    color: red;
+}
+.nav-tabs > li:hover > span {
+    display: inline-block;
+}
+
+.upload-options {
+    position: relative;
+    background-color: #007bff;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: center;
+    -webkit-transition: background-color ease-in-out 150ms;
+    transition: background-color ease-in-out 150ms;
+}
+
+.upload-options:hover{
+    background-color: #7fb1b3;
+}
+
+.upload-options label {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    width: 64px;
+    height: 100%;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.upload-options label::after {
+    content: 'add_photo_alternate';
+    font-family: 'Material Icons';
+    position: absolute;
+    font-size: 2.5rem;
+    color: #e6e6e6;
+    left: calc(50% - 1.25rem);
+    z-index: 0;
+}
+
+.upload-options label.without-img::after {
+    content: none;
+}
+
+.upload-options input {
+    z-index: -1;
+}
+
+
+
