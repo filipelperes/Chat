@@ -24,8 +24,8 @@ io.on('connection', function(socket){
 
   //Se alguma nova mensagem é escrita, esse evento
   //vai ser ligado
-  socket.on('chat message', (data) => {
-    socket.broadcast.emit('chat message', data);
+  socket.on('chat message', function(data, options){
+    socket.broadcast.emit('chat message', data, options);
   });
 
   socket.on('typing', (msg) => {
