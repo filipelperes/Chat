@@ -226,12 +226,12 @@ $(function () {
         addMessageChat(data, {
           right: true,
           log: false,
-          image: true
+          image: false
         });
         socket.emit('chat message', data, {
           right: false,
           log: false,
-          image: true
+          image: false
         });
         $m.val('');
       }
