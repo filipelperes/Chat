@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font: 13px Helvetica, Arial; }
 h1 {font-size: 13pt;}
-p {font-size: 1.25rem;}
+p, #formUser label {font-size: 1.25rem;}
 .w-100 {width: 100% !important;}
 .msg {margin-top: 5%;}
 

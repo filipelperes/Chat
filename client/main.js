@@ -127,9 +127,9 @@ $(function () {
 
       for(var i = 0; i < group.length; i++) {
           var item = document.createElement('li');
-          item.setAttribute("class", "list-group-item");
-
-          item.appendChild(document.createTextNode(group[i]));
+          
+          item.setAttribute("class", "list-group-item");  
+          item.appendChild(document.createTextNode(" " + group[i]));
 
           list.appendChild(item);
       }
@@ -144,7 +144,7 @@ $(function () {
     const updateTyping = (msg) => {
       if (!typing) {
         typing = true;
-        socket.emit('typing', name + " está digitando!");
+        socket.emit('typing', name + "...");
       }
       lastTypingTime = (new Date()).getTime();
 
@@ -190,7 +190,9 @@ $(function () {
     });
 
     $btnName.on('click', () => {
-      setUser();
+      if($btnName.val() != '') {
+        setUser();
+      }
     })
 
     $sendButton.on('click', function(){
