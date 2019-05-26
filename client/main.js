@@ -160,7 +160,7 @@ $(function () {
     // Quando ou o botão ou a tecla Enter são acionados, esse evento é chamado na tela principal
     $formMsg.on('submit', function(e){
       var msg = e.delegateTarget[1].value;
-      if(msg.length > 0) {
+      if(msg.length > 0 || img) {
         var file = img ? img.target.files[0] : undefined;
         var data = {
           time: moment.get('hour') + ":" + moment.get('minute'),
