@@ -26,8 +26,8 @@ $(function () {
 
     // Função para quando é mudado o tamanho da tela
     function resize(){
-      $cardChat.height($window.height() - 50 );
-      $cardBody.height($window.height() - 50 );     
+      $cardChat.height($window.height() - 60 );
+      $cardBody.height($window.height() - 60 );     
     }
 
     // Função para registrar o nome do usuário
